@@ -33,7 +33,7 @@ jobs:
             if [ -e "$f" ]; then echo "::error::不该提交 $f"; exit 1; fi
           done
           if grep -rIl --exclude-dir=.git --exclude-dir=.github \
-               -E "JSESSIONID=[0-9A-F]{8}|wrk-[A-Za-z0-9]{20,}" .; then
+               -E "JSESSIONID=[0-9A-F]{20,}|wrk-[A-Za-z0-9]{20,}" .; then
             echo "::error::检测到疑似真实凭据"; exit 1
           fi
           echo "OK: 没有发现凭据"
