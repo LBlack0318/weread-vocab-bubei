@@ -1,4 +1,4 @@
-# 微信读书划线 → 不背单词自制词书
+﻿# 微信读书划线 → 不背单词自制词书
 
 把微信读书里划线的英文单词/短语，一键整理成[不背单词](https://bbdc.cn)能直接导入的**自制词书**。
 
@@ -61,7 +61,7 @@ python scripts/demo.py
 
 ## 依赖
 
-- Python 3.9+，**零第三方库**
+- Python 3.10+，**零第三方库**
 - 微信读书 [Agent API Key](https://weread.qq.com/r/weread-skills)，格式 `wrk-xxxx`（免费，登录即取）
 - 可选：不背单词 cookie（想全自动建词书才需要）
 

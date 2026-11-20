@@ -1,4 +1,4 @@
----
+﻿---
 name: weread-vocab-bubei
 description: 把微信读书里划线的英文单词/短语整理成不背单词（bbdc.cn）能直接导入的「自制词书」。运行时会弹窗询问微信读书 API Key、弹窗让你选要导哪本书；词表外的词自动联网查词典校验；配置 bbdc cookie 后可以一条命令提交识别并建好词书。当用户说"把微信读书的划线导成单词本/生词本""整理不背单词词书""微信读书生词导入不背单词""导出我的划线单词"时使用。只收单词级与短语级划线，整句自动跳过。
 ---
@@ -9,7 +9,7 @@ description: 把微信读书里划线的英文单词/短语整理成不背单词
 
 上传默认人工点两下；配好 bbdc cookie 后 `--upload --create` 可以无人值守一路建完（接口细节见 [references/bbdc-import.md](references/bbdc-import.md)）。
 
-零第三方依赖，Python 3.9+ 即可。
+零第三方依赖，Python 3.10+ 即可。
 
 ## 交互点（三处）
 
