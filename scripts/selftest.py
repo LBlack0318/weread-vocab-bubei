@@ -555,6 +555,29 @@ class SelfTest(unittest.TestCase):
         self.assertEqual(len(words), 23)
         self.assertEqual(name, "测试书")
 
+    def test_21_pool_is_per_book(self):
+        """待攒池按书隔离：A 书攒的词不能串进 B 书的词书。"""
+        import types
+        state = {"exported": {}, "generated": [],
+                 "pool": [{"word": "alpha", "book": "书A"},
+                          {"word": "beta", "book": "书B"}]}
+        path = os.path.join(self.tmp, "state21.json")
+        out = os.path.join(self.tmp, "o21")
+        args = types.SimpleNamespace(sort="appearance", min_words=1, dry_run=False,
+                                     out=out, upload=False, create=False,
+                                     merge=False, name=None)
+        stats = {"extracted": 1, "word": 1}
+        ordered = {"gamma": {"word": "gamma", "phrase": "", "book": "书A",
+                             "author": "", "chapter": "", "date": ""}}
+        txt = run.emit(ordered, stats, args, state, path, "书A", {},
+                       "wordbook_书A", "2026-01-01")
+        self.assertIsNotNone(txt)
+        with open(txt, encoding="utf-8") as fh:
+            words = fh.read().split()
+        self.assertIn("alpha", words)      # 同书的待攒词会带上
+        self.assertIn("gamma", words)
+        self.assertNotIn("beta", words)    # 别书的不能混进来
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

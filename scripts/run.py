@@ -191,8 +191,13 @@ def emit(ordered, stats, args, state, state_path, book_title, notes,
     candidates = {}
     for item in state["pool"]:
         word = item.get("word")
-        if word and word not in state["exported"]:
-            candidates[word] = item
+        if not word or word in state["exported"]:
+            continue
+        # 待攒池按书隔离：别的书攒的词不该混进这本的词书
+        if not args.merge and book_title and item.get("book") \
+                and item["book"] != book_title:
+            continue
+        candidates[word] = item
     for word, rec in ordered.items():
         if word not in state["exported"] and word not in candidates:
             candidates[word] = rec
@@ -210,7 +215,9 @@ def emit(ordered, stats, args, state, state_path, book_title, notes,
         return None
 
     if len(words) < args.min_words:
-        state["pool"] = [candidates[w] for w in words]
+        # 只替换本书的条目，别把别的书的待攒词冲掉
+        others = [p for p in state["pool"] if (p.get("book") or "") != book_title]
+        state["pool"] = others + [dict(candidates[w], book=book_title) for w in words]
         store.save_state(state, state_path)
         log(f"  ! 只有 {len(words)} 个词，不背单词至少需要 {args.min_words} 个，"
             f"已进待攒池")
@@ -231,7 +238,7 @@ def emit(ordered, stats, args, state, state_path, book_title, notes,
             "date": candidates[word].get("date") or today,
             "exported_on": today,
         }
-    state["pool"] = []
+    state["pool"] = [p for p in state["pool"] if p.get("word") not in set(words)]
     state["generated"].append({"file": os.path.basename(txt), "count": len(words),
                                "date": today, "book": book_title})
     store.save_state(state, state_path)
@@ -286,7 +293,7 @@ def _push_to_bbdc(txt, words, args, book_title="", file_stem=""):
         return
     if saved.get("result_code") == 200:
         log(f"  ✓ 已创建词书《{name}》（{len(known)} 词）")
-        log("    手机 App：计划/仪表盘 → 换本词书 → 我的自制")
+        args._created = True
     else:
         err = saved.get("error_body") or saved.get("_raw") or saved
         log(f"  ! 创建被拒：{err}")
@@ -444,8 +451,11 @@ def main(argv=None):
         return 1
 
     log()
-    log("下一步：bbdc.cn → 登录 → 右上角菜单「自制词书」→ 上传对应 txt → 识别 → 命名")
-    log("        然后 App：计划/仪表盘 → 换本词书 → 我的自制")
+    if getattr(args, "_created", False):
+        log("词书已建好：手机 App → 计划/仪表盘 → 换本词书 → 我的自制")
+    else:
+        log("下一步：bbdc.cn → 登录 → 右上角菜单「自制词书」→ 上传对应 txt → 识别 → 命名")
+        log("        然后 App：计划/仪表盘 → 换本词书 → 我的自制")
     return 0
 
 
