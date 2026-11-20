@@ -1,0 +1,11 @@
+# 统一用 LF，避免 Windows 上提交出 CRLF 噪音
+* text=auto eol=lf
+
+*.py    text eol=lf
+*.md    text eol=lf
+*.tsv   text eol=lf
+*.txt   text eol=lf
+*.yml   text eol=lf
+
+# 词表较大，按二进制处理可避免 diff 噪音（但仍保留 LF 内容）
+assets/lexicon.tsv -diff

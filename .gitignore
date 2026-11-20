@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 运行产物（用户目录默认在 ~/.weread-vocab，这里只是保险）
+out/
+data/
+*.skill
+
+# 凭据：绝不提交
+api_key
+bbdc_cookies.txt
+.env
+.env.*
