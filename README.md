@@ -75,6 +75,8 @@ python scripts/run.py --remember-key     # 记住这次的 Key
 python scripts/run.py --use-saved-key    # 以后复用
 ```
 
+> 弹窗依赖 tkinter。Linux 上需要 `sudo apt install python3-tk`；装不了也没关系，脚本会自动退回命令行输入（`--no-gui` 可强制）。
+
 ### 全自动建词书（可选）
 
 想让它直接把词书建好，需要不背单词的登录 cookie：
